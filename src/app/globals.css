@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  /* Đảm bảo tất cả phần tử sử dụng box-sizing: border-box */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --primary: hsl(81, 77%, 41%);
+    --primary-foreground: hsl(87, 88%, 90%);
+    --bg-green: hsl(83, 100%, 97%);
+    --soft-green: hsl(87, 53%, 65%);
+    --strong-green: hsl(95, 98%, 17%);
+    --dark-green: hsl(97, 97%, 13%);
+    --very-dark-green: hsl(98, 96%, 11%);
+    --border: hsl(87, 88%, 90%);
+    --input: hsl(81, 77%, 41%);
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+  }
+
+  /* Áp dụng màu viền và focus cho các input, textarea, select */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply border-soft_green focus:outline-none; /* Sử dụng màu focus tùy chỉnh */
+  }
+
+  /* Đặt màu nền và màu chữ cho body */
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Áp dụng màu viền mặc định cho tất cả phần tử */
+  * {
+    @apply border-border;
+  }
+}

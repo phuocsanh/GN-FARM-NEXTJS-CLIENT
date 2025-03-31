@@ -1,9 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 
 const ErrorPage = () => {
-  const router = useRouter();
   const queryParams = new URLSearchParams(window.location.search);
   const message = queryParams.get("message");
   const code = queryParams.get("code");

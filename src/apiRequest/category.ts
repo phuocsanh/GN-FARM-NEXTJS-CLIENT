@@ -1,16 +1,16 @@
 import http from "@/lib/http";
 import { CategoryItem } from "@/models/category";
 import { ResponseData } from "@/models/common";
-import { headers } from "next/headers";
 
 const categoryApiRequest = {
   getAllCategories: () => {
     return http.get<ResponseData<CategoryItem[]>>(
-      "v1/api/category/getAllCategories",
+      "api/v1/category/get-all-categories",
       {
         cache: "no-store",
       }
     );
   },
 };
+
 export default categoryApiRequest;

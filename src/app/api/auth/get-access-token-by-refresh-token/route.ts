@@ -1,33 +1,32 @@
-import { HttpError } from "@/lib/http";
 import { cookies } from "next/headers";
+import { createApiResponse, handleApiError } from "@/lib/api-response";
+import envConfig from "@/config";
+import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
 export async function POST() {
-  // Lấy refreshToken từ header
-  const cookieStore = cookies();
-
-  const refreshToken = cookieStore.get("refreshToken")?.value;
-
-  if (!refreshToken) {
-    return NextResponse.json(
-      {
-        message: "No refresh token",
-        code: 500,
-        data: null,
-      },
-      { status: 500 }
-    );
-  }
-
   try {
-    // Gửi refreshToken trong header để lấy accessToken mới
+    const cookieStore = cookies();
+    const refreshToken = cookieStore.get("refreshToken")?.value;
+
+    if (!refreshToken) {
+      return NextResponse.json(
+        {
+          message: "No refresh token",
+          code: 401,
+          data: null,
+        },
+        { status: 401 }
+      );
+    }
+
     const response = await fetch(
-      " http://localhost:8080/api/v1/access/handleRefreshToken",
+      `${envConfig.NEXT_PUBLIC_API_ENDPOINT}/api/v1/access/handleRefreshToken`,
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${refreshToken}`, // Gửi refreshToken trong header
-          "Content-Type": "application/json", // Optional nếu server yêu cầu JSON format
+          Authorization: `Bearer ${refreshToken}`,
+          "Content-Type": "application/json",
         },
       }
     );
@@ -35,35 +34,39 @@ export async function POST() {
     if (!response.ok) {
       return NextResponse.json(
         {
-          message: "An unexpected error occurred",
-          code: 500,
+          message: "Invalid refresh token",
+          code: 401,
           data: null,
         },
-        { status: 500 }
-      );
-    }
-    const responseData = await response.json();
-    return Response.json(responseData);
-  } catch (e) {
-    if (e instanceof HttpError) {
-      return NextResponse.json(
-        {
-          message: `HTTP Error: ${e.message}`,
-          code: e.code,
-          data: e.data,
-        },
-        { status: e.code }
+        { status: 401 }
       );
     }
 
-    // Trường hợp lỗi khác
-    return NextResponse.json(
-      {
-        message: "An unexpected error occurred",
-        code: 500,
-        data: null,
-      },
-      { status: 500 }
-    );
+    const responseData = await response.json();
+    
+    // Update cookies with new tokens
+    if (responseData.data?.tokens.accessToken && responseData.data?.tokens.refreshToken) {
+      const { accessToken, refreshToken: newRefreshToken } = responseData.data.tokens;
+      const decodeAccessToken = jwt.decode(accessToken) as { exp: number };
+      const decodeRefreshToken = jwt.decode(newRefreshToken) as { exp: number };
+
+      cookieStore.set("accessToken", accessToken, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        expires: decodeAccessToken.exp * 1000,
+      });
+
+      cookieStore.set("refreshToken", newRefreshToken, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        expires: decodeRefreshToken.exp * 1000,
+      });
+    }
+
+    return createApiResponse(responseData);
+  } catch (error) {
+    return handleApiError(error);
   }
 }

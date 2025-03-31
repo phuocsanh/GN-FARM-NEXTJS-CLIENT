@@ -99,7 +99,7 @@ export const useRegisterEmailMutation = () => {
         throw response;
       }
 
-      return response.json(); // TypeScript sẽ hiểu kết quả trả về có kiểu RegisterEmailResponse
+      return response.json();
     },
     onError: () => {
       // Xử lý lỗi ở đây, ví dụ: hiển thị thông báo lỗi cho người dùng

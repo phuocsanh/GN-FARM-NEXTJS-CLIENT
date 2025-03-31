@@ -13,7 +13,7 @@ const productApiRequest = {
     limit: number;
   }) => {
     return http.get<PagingResponseData<ProductItem>>(
-      `v1/api/product/findAllOrTypePublishProduct?product_type=${product_type}&page=${page}&limit=${limit}`
+      `v1/api/product/find-all-or-type-publish-product?product_type=${product_type}&page=${page}&limit=${limit}`
     );
   },
 };

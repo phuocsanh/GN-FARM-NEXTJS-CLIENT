@@ -8,10 +8,31 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '*',
+        hostname: 'cdn-icons-png.flaticon.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'bizweb.dktcdn.net',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'assets2.htv.com.vn',
+        port: '',
+        pathname: '/Images/**',
+      },
     ],
+  },
+  // Add React strict mode
+  reactStrictMode: true,
+  // Add TypeScript strict mode
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  // Add ESLint configuration
+  eslint: {
+    ignoreDuringBuilds: false,
   },
 }
 

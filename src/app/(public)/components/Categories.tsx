@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import Img from "@/app/components/Img";
-import Block from "@/app/components/Block";
 import { CategoryItem } from "@/models/category";
 import { useRouter } from "next/navigation";
 

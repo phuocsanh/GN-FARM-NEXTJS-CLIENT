@@ -14,26 +14,26 @@ const config: Config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "var(--primary)",
-          foreground: "var(--primary-foreground)",
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         soft_green: {
-          DEFAULT: "var(--soft-green)",
+          DEFAULT: "hsl(var(--soft-green))",
         },
         strong_green: {
-          DEFAULT: "var(--strong-green)",
+          DEFAULT: "hsl(var(--strong-green))",
         },
-        drak_green: {
-          DEFAULT: "var(--drak-green)",
+        dark_green: {
+          DEFAULT: "hsl(var(--dark-green))",
         },
-        very_drak_green: {
-          DEFAULT: "var(--very-drak-green)",
+        very_dark_green: {
+          DEFAULT: "hsl(var(--very-dark-green))",
         },
         bg_green: {
-          DEFAULT: "var(--bg-green)",
+          DEFAULT: "hsl(var(--bg-green))",
         },
-        border: "var(--border)",
-        input: "var(--input)",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -54,8 +54,8 @@ const config: Config = {
           "100%": { backgroundPosition: "200%" },
         },
         blink: {
-          "0%, 100%": { color: "var(--primary)" }, // Màu xanh lá đậm
-          "50%": { color: "var(--soft-green)" }, // Màu xanh lá nhạt
+          "0%, 100%": { color: "hsl(var(--primary))" },
+          "50%": { color: "hsl(var(--soft-green))" },
         },
       },
       animation: {

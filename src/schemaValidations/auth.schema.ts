@@ -1,13 +1,18 @@
-import { RoleValues } from "@/models/common";
-import z from "zod";
+import { RoleValues } from "@/models/common"
+import z from "zod"
 export const RegisterVerifyOTP = z.object({
-  verify_code: z.string(),
-  verify_key: z.string(),
-});
+  verifyCode: z.string(),
+  verifyKey: z.string(),
+})
 
 export const RegisterEmail = z.object({
-  email: z.string().min(1, "Email là bắt buộc").email("Email sai định dạng"),
-});
+  verifyKey: z
+    .string()
+    .min(1, "Email là bắt buộc")
+    .email("Email sai định dạng"),
+  verifyType: z.number().optional(),
+  verifyPurpose: z.string().optional(),
+})
 
 export const RegisterPassword = z
   .object({
@@ -24,13 +29,13 @@ export const RegisterPassword = z
         code: "custom",
         message: "Mật khẩu không khớp",
         path: ["confirmPassword"],
-      });
+      })
     }
-  });
+  })
 
-export type RegisterVerifyOTPType = z.TypeOf<typeof RegisterVerifyOTP>;
-export type RegisterPasswordType = z.TypeOf<typeof RegisterPassword>;
-export type RegisterEmailType = z.TypeOf<typeof RegisterEmail>;
+export type RegisterVerifyOTPType = z.TypeOf<typeof RegisterVerifyOTP>
+export type RegisterPasswordType = z.TypeOf<typeof RegisterPassword>
+export type RegisterEmailType = z.TypeOf<typeof RegisterEmail>
 
 export const RegisterRes = z.object({
   data: z.object({
@@ -44,35 +49,38 @@ export const RegisterRes = z.object({
     }),
   }),
   message: z.string(),
-});
+})
 
-export type RegisterResType = z.TypeOf<typeof RegisterRes>;
+export type RegisterResType = z.TypeOf<typeof RegisterRes>
 
 export const LoginBody = z
   .object({
-    email: z.string().email("Email không đúng định dạng"),
-    password: z.string().min(6, "Tối thiểu 6 kí tự").max(20, "Tối đa 20 kí tự"),
+    userAccount: z.string().email("Email không đúng định dạng"),
+    userPassword: z
+      .string()
+      .min(6, "Tối thiểu 6 kí tự")
+      .max(20, "Tối đa 20 kí tự"),
   })
-  .strict();
+  .strict()
 
-export type LoginBodyType = z.TypeOf<typeof LoginBody>;
+export type LoginBodyType = z.TypeOf<typeof LoginBody>
 
 export type LoginResType = {
   user: {
-    _id: string;
-    email: string;
-    name: string;
-  };
+    _id: string
+    email: string
+    name: string
+  }
   tokens: {
-    accessToken: string;
-    refreshToken: string;
-  };
-};
+    accessToken: string
+    refreshToken: string
+  }
+}
 
-export const SlideSessionBody = z.object({}).strict();
+export const SlideSessionBody = z.object({}).strict()
 
-export type SlideSessionBodyType = z.TypeOf<typeof SlideSessionBody>;
+export type SlideSessionBodyType = z.TypeOf<typeof SlideSessionBody>
 
-export const SlideSessionRes = RegisterRes;
+export const SlideSessionRes = RegisterRes
 
-export type SlideSessionResType = z.TypeOf<typeof SlideSessionRes>;
+export type SlideSessionResType = z.TypeOf<typeof SlideSessionRes>

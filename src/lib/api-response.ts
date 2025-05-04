@@ -7,7 +7,9 @@ interface ApiResponse<T = unknown> {
   data: T | null
 }
 
-export function handleApiError(error: unknown): NextResponse<ApiResponse> {
+export function serverHandleApiError(
+  error: unknown
+): NextResponse<ApiResponse> {
   console.error("API Error:", error)
 
   if (error instanceof HttpError) {
@@ -31,10 +33,17 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse> {
   )
 }
 
-export function createApiResponse<T>(data: T): NextResponse<ApiResponse<T>> {
+export function createApiResponse<T>(data: T): NextResponse<T> {
+  // Kiểm tra xem data có phải là một API response không
+  if (data && typeof data === "object" && "code" in data && "message" in data) {
+    // Nếu đã là API response, trả về trực tiếp
+    return NextResponse.json(data)
+  }
+
+  // Nếu không, bọc lại trong API response
   return NextResponse.json({
     message: "Success",
     code: 200,
     data,
   })
-} 
+}

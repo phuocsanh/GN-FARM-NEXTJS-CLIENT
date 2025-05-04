@@ -1,108 +1,59 @@
-import authApiRequest from "@/apiRequest/auth";
 import {
   UpdatePassBodyType,
   UpdatePassType,
   VerifyOTPType,
-} from "@/models/auth";
-import { ResponseData } from "@/models/common";
+} from "@/models/auth"
+import { ResponseData } from "@/models/common"
 import {
   LoginBodyType,
   LoginResType,
   RegisterEmailType,
   RegisterVerifyOTPType,
-} from "@/schemaValidations/auth.schema";
-import { useAppStore } from "@/stores";
-import { useMutation } from "@tanstack/react-query";
+} from "@/schemaValidations/auth.schema"
+import { useAppStore } from "@/stores"
+import { useApiMutation, useApiQuery } from "@/hooks/use-api"
 
-export const useRefreshTokenMutation = () => {
-  return useMutation({
-    mutationFn: async () => {
-      const response = await fetch(
-        "/api/auth/get-access-token-by-refresh-token",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // Gửi cookie tự động (chứa refreshToken)
-        }
-      );
-
-      if (!response.ok) {
-        throw response;
-      }
-      return response.json(); //
-    },
-  });
-};
-export const useLoginMutation = () => {
-  return useMutation<ResponseData<LoginResType>, Error, LoginBodyType>({
-    mutationFn: async (data) => {
-      const res = await authApiRequest.cLogin(data);
+// Mutations
+export const useLoginMutation = () =>
+  useApiMutation<ResponseData<LoginResType>, LoginBodyType>("/api/auth/login", {
+    onSuccessCallback: (res) => {
       if (res.code === 200 && res?.data?.tokens.accessToken) {
-        useAppStore.setState({ isLogin: true });
+        useAppStore.setState({ isLogin: true })
       }
-      return res;
     },
-  });
-};
+  })
 
-export const useUpdatePassRegisterMutation = () => {
-  return useMutation<ResponseData<UpdatePassType>, Error, UpdatePassBodyType>({
-    mutationFn: async (data) => {
-      const response = await fetch("/api/auth/register/update-pass", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) {
-        throw response;
-      }
-      return response.json(); //
+export const useLogoutMutation = () =>
+  useApiMutation<ResponseData<{ success: boolean }>, void>("/api/auth/logout", {
+    onSuccessCallback: () => {
+      useAppStore.setState({ isLogin: false })
+      // Chuyển hướng về trang login sau khi đăng xuất
+      window.location.href = "/login"
     },
-  });
-};
-export const useVerifyOTPMutation = () => {
-  return useMutation<ResponseData<VerifyOTPType>, Error, RegisterVerifyOTPType>(
+  })
+
+export const useRegisterEmailMutation = () =>
+  useApiMutation<ResponseData<null>, RegisterEmailType>(
+    "/api/auth/register/email"
+  )
+
+export const useVerifyOTPMutation = () =>
+  useApiMutation<ResponseData<VerifyOTPType>, RegisterVerifyOTPType>(
+    "/api/auth/register/verify-otp"
+  )
+
+export const useUpdatePassRegisterMutation = () =>
+  useApiMutation<ResponseData<UpdatePassType>, UpdatePassBodyType>(
+    "/api/auth/register/update-pass"
+  )
+
+// Queries
+export const useRefreshTokenQuery = () =>
+  useApiQuery<ResponseData<{ accessToken: string }>>(
+    "/api/auth/get-access-token-by-refresh-token",
     {
-      mutationFn: async (data) => {
-        const response = await fetch("/api/auth/register/verify-otp", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
-        if (!response.ok) {
-          throw response;
-        }
-        return response.json(); //
-      },
+      queryKey: ["refreshToken"],
+      credentials: "include",
+      enabled: true,
     }
-  );
-};
-
-export const useRegisterEmailMutation = () => {
-  return useMutation<ResponseData<null>, Error, RegisterEmailType>({
-    mutationFn: async (data) => {
-      const response = await fetch("/api/auth/register/email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw response;
-      }
-
-      return response.json();
-    },
-    onError: () => {
-      // Xử lý lỗi ở đây, ví dụ: hiển thị thông báo lỗi cho người dùng
-    },
-  });
-};
+  )

@@ -1,12 +1,17 @@
 // components/Navbar.tsx
-"use client";
+"use client"
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { BsSearch } from "react-icons/bs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-import { CreditCard, LifeBuoy, LogOut, Settings, User } from "lucide-react";
+import Link from "next/link"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  CreditCard,
+  LifeBuoy,
+  LogOut,
+  Menu,
+  Settings,
+  User,
+  X,
+} from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,86 +19,114 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { IoMdArrowDropdown, IoMdHome } from "react-icons/io";
-import { useAppStore } from "@/stores";
-import { useEffect, useRef, useState } from "react";
-import { Timeout } from "@/models/common";
-import Img from "./Img";
-import Block from "./Block";
+} from "@/components/ui/dropdown-menu"
+import { IoMdArrowDropdown } from "react-icons/io"
+import { useAppStore } from "@/stores"
+import Img from "./Img"
+import Block from "./Block"
+import { useState } from "react"
+import { useLogoutMutation } from "@/tanstack-queries/use-auth"
+
 export default function Navbar() {
-  const pathname = usePathname();
-  const isAuthenticated = useAppStore((state) => state.isLogin);
+  const isAuthenticated = useAppStore((state) => state.isLogin)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const logoutMutation = useLogoutMutation()
 
   return (
-    <nav className="fixed left-0 w-full z-50 h-auto bg-white">
-      <Block className="">
-        <div className="px-4 sm:px-8 py-4 flex justify-between items-center">
-          {/* Logo và Trang chủ */}
-          <div className="flex items-center space-x-2">
+    <nav className='fixed left-0 w-full z-50 h-auto bg-background'>
+      <Block className='px-0'>
+        <div className='px-2 sm:px-8 py-3 flex items-center justify-between'>
+          <div className='flex items-center space-x-4 sm:space-x-8'>
+            {/* Logo */}
             <Link
-              href="/"
-              className="text-sm md:text-lg font-semibold text-primary-foreground text-white truncate flex items-center"
+              href='/'
+              className='text-sm md:text-lg font-semibold text-foreground truncate flex items-center'
             >
-              <span className="sm:hidden">
-                <IoMdHome size={30} />
-              </span>
-              <div className="w-9 h-9">
+              <div className='w-8 h-8 sm:w-9 sm:h-9'>
                 <Img
-                  alt=""
-                  src="https://cdn-icons-png.flaticon.com/128/8044/8044419.png"
+                  alt=''
+                  src='https://cdn-icons-png.flaticon.com/128/8044/8044419.png'
                   fill
                 />
               </div>
             </Link>
+
+            {/* Menu chính - Desktop */}
+            <div className='hidden sm:flex items-center space-x-6'>
+              <Link
+                href='/'
+                className='text-foreground hover:text-primary font-medium'
+              >
+                Trang chủ
+              </Link>
+              <div className='relative group'>
+                <button className='text-foreground hover:text-primary font-medium flex items-center'>
+                  Sản phẩm
+                  <IoMdArrowDropdown className='w-5 h-5 ml-1 transition-transform duration-300 transform group-hover:rotate-180' />
+                </button>
+                <div className='absolute top-full left-0 text-sm bg-background rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 min-w-[200px] py-2'>
+                  {/* Dropdown content */}
+                </div>
+              </div>
+              <Link
+                href='/'
+                className='text-foreground hover:text-primary font-medium'
+              >
+                Khuyến mãi
+              </Link>
+              <Link
+                href='/chat'
+                className='text-foreground hover:text-primary font-medium'
+              >
+                Chat
+              </Link>
+            </div>
           </div>
 
-          {/* Tìm kiếm - chỉ hiển thị trên màn hình lớn */}
-          {/* {pathname === "/" && (
-          <div className="hidden sm:flex items-center space-x-2 bg-white w-[50%] sm:w-[60%] md:w-[50%] rounded-sm border-2 border-primary h-10">
-            <input
-              className="w-full p-1 sm:p-2 rounded border-none bg-white text-sm"
-              placeholder="Tìm kiếm..."
-            />
-            <button className="bg-primary cursor-pointer items-center justify-center h-full px-2">
-              <BsSearch className="w-5 sm:w-6 text-lg text-white" />
+          <div className='flex items-center space-x-2 sm:space-x-4'>
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className='sm:hidden p-1 text-foreground hover:text-primary'
+            >
+              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
-          </div>
-        )} */}
 
-          {/* Menu responsive */}
-          <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* User menu - Visible on both mobile and desktop */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar>
+                <Avatar className='h-8 w-8 sm:h-10 sm:w-10'>
                   <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="@shadcn"
+                    src='https://github.com/shadcn.png'
+                    alt='@shadcn'
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-48 md:w-56 bg-white">
+              <DropdownMenuContent
+                align='end'
+                className='w-48 md:w-56 bg-background'
+              >
                 <DropdownMenuSeparator />
                 {isAuthenticated ? (
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
-                      <User />
+                      <User className='mr-2 h-4 w-4' />
                       <span>Profile</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      <CreditCard />
+                      <CreditCard className='mr-2 h-4 w-4' />
                       <span>Billing</span>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 ) : (
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
-                      <User />
+                      <User className='mr-2 h-4 w-4' />
                       <Link href={"/register"}>Đăng kí</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      <CreditCard />
+                      <CreditCard className='mr-2 h-4 w-4' />
                       <Link href={"/login"}>Đăng nhập</Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
@@ -101,17 +134,17 @@ export default function Navbar() {
 
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <LifeBuoy />
+                  <LifeBuoy className='mr-2 h-4 w-4' />
                   <span>Hỗ trợ</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Settings />
+                  <Settings className='mr-2 h-4 w-4' />
                   <span>Cài đặt</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {isAuthenticated && (
-                  <DropdownMenuItem>
-                    <LogOut />
+                  <DropdownMenuItem onClick={() => logoutMutation.mutate()}>
+                    <LogOut className='mr-2 h-4 w-4' />
                     <span>Đăng xuất</span>
                   </DropdownMenuItem>
                 )}
@@ -120,31 +153,41 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Menu chính */}
-        <div className="bg-primary mx-0 sm:mx-12 mt-auto rounded-sm flex flex-wrap items-center justify-center  py-3  sm:space-y-0 sm:flex-row">
-          <Link
-            href={"/"}
-            className="text-white px-2 md:px4 lg:px-4 font-medium flex items-center"
-          >
-            Trang chủ
-          </Link>
-          <div className="cursor-pointer group px-2 md:px4 lg:px-4">
-            <span className="text-white items-center flex flex-row font-medium">
-              Sản phẩm
-              <div className="inline-block transition-transform duration-300 transform group-hover:rotate-180">
-                <IoMdArrowDropdown className="text-white w-6 h-6" />
+        {/* Mobile menu */}
+        {isMobileMenuOpen && (
+          <div className='sm:hidden bg-background border-t'>
+            <div className='px-4 py-2 space-y-1'>
+              <Link
+                href='/'
+                className='block py-2 text-foreground hover:text-primary font-medium text-sm'
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Trang chủ
+              </Link>
+              <div className='relative'>
+                <button className='w-full py-2 text-left text-foreground hover:text-primary font-medium text-sm flex items-center justify-between'>
+                  Sản phẩm
+                  <IoMdArrowDropdown className='w-4 h-4' />
+                </button>
               </div>
-            </span>
-            <div className="absolute top-full left-0 text-sm rounded px-2 py-1 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 w-full"></div>
+              <Link
+                href='/'
+                className='block py-2 text-foreground hover:text-primary font-medium text-sm'
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Khuyến mãi
+              </Link>
+              <Link
+                href='/chat'
+                className='block py-2 text-foreground hover:text-primary font-medium text-sm'
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Chat
+              </Link>
+            </div>
           </div>
-          <Link
-            href={"/"}
-            className="text-white px-2 md:px4 lg:px-4 font-medium flex items-center"
-          >
-            Khuyến mãi
-          </Link>
-        </div>
+        )}
       </Block>
     </nav>
-  );
+  )
 }

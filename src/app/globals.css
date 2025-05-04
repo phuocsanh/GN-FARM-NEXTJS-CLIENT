@@ -23,30 +23,35 @@ body {
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
-    --primary: hsl(81, 77%, 41%);
-    --primary-foreground: hsl(87, 88%, 90%);
-    --bg-green: hsl(83, 100%, 97%);
-    --soft-green: hsl(87, 53%, 65%);
-    --strong-green: hsl(95, 98%, 17%);
-    --dark-green: hsl(97, 97%, 13%);
-    --very-dark-green: hsl(98, 96%, 11%);
-    --border: hsl(87, 88%, 90%);
-    --input: hsl(81, 77%, 41%);
+    --primary: 81 77% 41%;
+    --primary-foreground: 0 0% 100%;
+    --bg-green: 83 100% 97%;
+    --soft-green: 87 53% 65%;
+    --strong-green: 95 98% 17%;
+    --dark-green: 97 97% 13%;
+    --very-dark-green: 98 96% 11%;
+    --border: 87 88% 90%;
+    --input: 81 77% 41%;
     --radius: 0.5rem;
   }
 
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+    --primary: 81 77% 41%;
+    --primary-foreground: 0 0% 100%;
+    --bg-green: 83 100% 97%;
+    --soft-green: 87 53% 65%;
+    --strong-green: 95 98% 17%;
+    --dark-green: 97 97% 13%;
+    --very-dark-green: 98 96% 11%;
   }
 
   /* Áp dụng màu viền và focus cho các input, textarea, select */
   input:focus,
   textarea:focus,
   select:focus {
-    @apply border-soft_green focus:outline-none; /* Sử dụng màu focus tùy chỉnh */
+    @apply border-soft_green focus:outline-none;
   }
 
   /* Đặt màu nền và màu chữ cho body */

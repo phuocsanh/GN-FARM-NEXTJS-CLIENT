@@ -9,7 +9,7 @@ import Loading from "./loading";
 import Img from "../components/Img";
 import Bonsai from "./components/Bonsai";
 
-async function Page({ searchParams }: { searchParams: { category?: string } }) {
+async function Page() {
   try {
     // const { category } = searchParams;
     // const categories = await categoryApiRequest.getAllCategories();

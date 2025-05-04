@@ -6,14 +6,16 @@ import Img from "../components/Img";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { convertCurrency } from "@/lib/utils";
 import { IoMdStar } from "react-icons/io";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { PagingResponseData } from "@/models/common";
 import { ProductItem } from "@/models/product";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { COLLOR } from "@/lib/color";
 import { useInView } from "react-intersection-observer";
+
 function ListProduct({ data }: { data: PagingResponseData<ProductItem> }) {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { ref, inView } = useInView();
   const category = searchParams.get("category");
   const {
@@ -54,7 +56,13 @@ function ListProduct({ data }: { data: PagingResponseData<ProductItem> }) {
     if (inView) {
       fetchNextPage();
     }
-  }, [inView]);
+  }, [inView, fetchNextPage]);
+
+  useEffect(() => {
+    if (searchParams) {
+      router.replace(`?${searchParams.toString()}`);
+    }
+  }, [searchParams, router]);
 
   return (
     <Block>

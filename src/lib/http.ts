@@ -21,6 +21,11 @@ interface HttpErrorResponse {
   message: string
 }
 
+interface EntityErrorResponse extends HttpErrorResponse {
+  code: 422
+  data: EntityErrorPayload
+}
+
 interface AuthHeaders {
   Authorization?: string
 }
@@ -38,7 +43,7 @@ export class HttpError extends Error {
 }
 
 export class EntityError extends HttpError {
-  constructor(response: HttpErrorResponse & { code: 422; data: EntityErrorPayload }) {
+  constructor(public readonly response: EntityErrorResponse) {
     super(response)
     this.name = "EntityError"
   }
@@ -71,9 +76,12 @@ class HttpClient {
 
   private async refreshAccessToken(): Promise<string | null> {
     try {
-      const response = await fetch("/api/auth/get-access-token-by-refresh-token", {
-        method: "POST",
-      })
+      const response = await fetch(
+        "/api/auth/get-access-token-by-refresh-token",
+        {
+          method: "POST",
+        }
+      )
       if (!response.ok) return null
       const { accessToken } = await response.json()
       return accessToken
@@ -164,12 +172,17 @@ class HttpClient {
     })
 
     console.log("Response status:", response.status)
-    console.log("Response headers:", Object.fromEntries(response.headers.entries()))
+    console.log(
+      "Response headers:",
+      Object.fromEntries(response.headers.entries())
+    )
 
     if (!response) {
       const errorMessage = "An error occurred while fetching data."
       if (isClient) {
-        window.location.href = `/error?message=${encodeURIComponent(errorMessage)}`
+        window.location.href = `/error?message=${encodeURIComponent(
+          errorMessage
+        )}`
       } else {
         redirect(`/error?message=${encodeURIComponent("Error")}`)
       }
@@ -178,7 +191,12 @@ class HttpClient {
 
     if (!response.ok) {
       if (response.status === AUTHENTICATION_ERROR_STATUS) {
-        response = await this.handleAuthenticationError(fullUrl, options, method, body)
+        response = await this.handleAuthenticationError(
+          fullUrl,
+          options,
+          method,
+          body
+        )
       } else {
         let errorData = null
         let errorMessage = response.statusText || "An error occurred"
@@ -186,7 +204,7 @@ class HttpClient {
         try {
           const contentType = response.headers.get("content-type")
           console.log("Content-Type:", contentType)
-          
+
           if (contentType && contentType.includes("application/json")) {
             errorData = await response.json()
             errorMessage = errorData?.message || errorMessage
@@ -234,15 +252,24 @@ class HttpClient {
   }
 
   post<T>(url: string, body: unknown, options?: Omit<CustomOptions, "body">) {
-    return this.request<T>("POST", url, { ...options, body: body as BodyInit | null | undefined })
+    return this.request<T>("POST", url, {
+      ...options,
+      body: body as BodyInit | null | undefined,
+    })
   }
 
   put<T>(url: string, body: unknown, options?: Omit<CustomOptions, "body">) {
-    return this.request<T>("PUT", url, { ...options, body: body as BodyInit | null | undefined })
+    return this.request<T>("PUT", url, {
+      ...options,
+      body: body as BodyInit | null | undefined,
+    })
   }
 
   patch<T>(url: string, body: unknown, options?: Omit<CustomOptions, "body">) {
-    return this.request<T>("PATCH", url, { ...options, body: body as BodyInit | null | undefined })
+    return this.request<T>("PATCH", url, {
+      ...options,
+      body: body as BodyInit | null | undefined,
+    })
   }
 
   delete<T>(url: string, options?: Omit<CustomOptions, "body">) {

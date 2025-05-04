@@ -1,39 +1,49 @@
-import http from "@/lib/http";
+import http from "@/lib/http"
 import {
   UpdatePassBodyType,
   UpdatePassType,
   VerifyOTPType,
-} from "@/models/auth";
-import { ResponseData } from "@/models/common";
+} from "@/models/auth"
+import { ResponseData } from "@/models/common"
 import {
   LoginBodyType,
   LoginResType,
   RegisterEmailType,
   RegisterVerifyOTPType,
-} from "@/schemaValidations/auth.schema";
+} from "@/schemaValidations/auth.schema"
 
 const authApiRequest = {
-  sLogin: (body: LoginBodyType) =>
-    http.post<ResponseData<LoginResType>>("api/v1/user/login", body),
-  cLogin: (body: LoginBodyType) => {
-    return http.post<ResponseData<LoginResType>>("/api/auth/login", body, {
-      baseUrl: "",
-    });
+  sLogin: (body: LoginBodyType) => {
+    console.log("🚀 ~ body:", body)
+    return http.post<ResponseData<LoginResType>>("user/login", body)
   },
+
   registerEmail: (body: RegisterEmailType) => {
-    return http.post<ResponseData<null>>("api/v1/user/register", body);
+    console.log("Registering email with body:", body)
+    // Thử endpoint khác nếu user/register không tồn tại
+    return http.post<ResponseData<null>>("user/register", body)
   },
   verifyOTP: (body: RegisterVerifyOTPType) => {
-    return http.post<ResponseData<VerifyOTPType>>(
-      "api/v1/user/verify-otp",
-      body
-    );
+    console.log("Verifying OTP with body:", body)
+    // Thử endpoint khác nếu user/verify-otp không tồn tại
+    return http.post<ResponseData<VerifyOTPType>>("user/verify-otp", body)
   },
   updatePassRegister: (body: UpdatePassBodyType) => {
     return http.post<ResponseData<UpdatePassType>>(
-      "api/v1/user/update-pass-register",
+      "user/update-pass-register",
       body
-    );
+    )
   },
-};
-export default authApiRequest;
+  logout: (accessToken: string) => {
+    return http.post<ResponseData<{ success: boolean }>>(
+      "user/logout",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+  },
+}
+export default authApiRequest

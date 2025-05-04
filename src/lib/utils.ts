@@ -20,32 +20,63 @@ export const normalizePath = (path: string) => {
   return path.startsWith("/") ? path.slice(1) : path;
 };
 
+interface ErrorItem {
+  field: string;
+  message: string;
+}
+
 export const handleErrorApi = ({
   error,
   setError,
   duration,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  error: any;
+  error: Error | EntityError | unknown;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setError?: UseFormSetError<any>;
   duration?: number;
 }) => {
-  if (error instanceof EntityError && setError) {
-    error.data.errors.forEach((item) => {
+  console.log("=== Error Handling Debug ===");
+  console.log("Error object:", error);
+
+  // Xử lý lỗi validation từ server (EntityError)
+  if (error instanceof EntityError && setError && error.response?.data?.errors) {
+    console.log("Handling EntityError");
+    (error.response.data.errors as ErrorItem[]).forEach((item: ErrorItem) => {
       setError(item.field, {
         type: "server",
         message: item.message,
       });
     });
-  } else {
-    toast({
-      title: "Lỗi",
-      description: error ?? "Lỗi không xác định",
-      variant: "destructive",
-      duration: duration ?? 5000,
-    });
+    return;
   }
+
+  // Xử lý lỗi từ API
+  let errorMessage = "Có lỗi xảy ra, vui lòng thử lại";
+
+  if (typeof error === 'object' && error !== null) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const err = error as any;
+    console.log("Processing error object:", err);
+    
+    if (err.response?.data?.message) {
+      errorMessage = err.response.data.message;
+    } else if (err.response?.message) {
+      errorMessage = err.response.message;
+    } else if (err.message) {
+      errorMessage = err.message;
+    } else if (err.data?.message) {
+      errorMessage = err.data.message;
+    }
+  }
+
+  console.log("Final error message:", errorMessage);
+  
+  toast({
+    title: "Lỗi",
+    description: errorMessage,
+    variant: "destructive",
+    duration: duration ?? 5000,
+  });
 };
 
 export const isServerResponseError = (
@@ -65,6 +96,7 @@ export const isServerResponseError = (
 export const getAccessTokenFromLocalStorage = () => {
   return localStorage.getItem("accessToken");
 };
+
 export const getRefreshTokenFromLocalStorage = () => {
   return localStorage.getItem("refreshToken");
 };

@@ -16,6 +16,13 @@ export type ApiResponse = {
 export type ResponseData<D> = ApiResponse & {
   data: D;
 };
+
+// Kiểu dữ liệu cho response có items (từ SuccessResponseWithItems trong Go)
+export type ResponseDataWithItems<D> = ApiResponse & {
+  data: {
+    items: D[];
+  };
+};
 export type ApiResponseError = {
   status: number;
   statusText: string;

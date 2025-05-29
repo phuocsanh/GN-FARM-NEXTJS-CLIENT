@@ -1,23 +1,23 @@
-"use client";
-import React, { useEffect } from "react";
-import Block from "@/app/components/Block";
-import productApiRequest from "@/apiRequest/product";
-import Img from "../components/Img";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { convertCurrency } from "@/lib/utils";
-import { IoMdStar } from "react-icons/io";
-import { useSearchParams, useRouter } from "next/navigation";
-import { PagingResponseData } from "@/models/common";
-import { ProductItem } from "@/models/product";
-import LoadingSpinner from "../components/LoadingSpinner";
-import { COLLOR } from "@/lib/color";
-import { useInView } from "react-intersection-observer";
+"use client"
+import React, { useEffect } from "react"
+import Block from "@/app/components/Block"
+import productApiRequest from "@/apiRequest/product"
+import Img from "../components/Img"
+import { useInfiniteQuery } from "@tanstack/react-query"
+import { convertCurrency } from "@/lib/utils"
+import { IoMdStar } from "react-icons/io"
+import { useSearchParams, useRouter } from "next/navigation"
+import { PagingResponseData } from "@/models/common"
+import { ProductItem } from "@/models/product"
+import LoadingSpinner from "../components/LoadingSpinner"
+import { COLLOR } from "@/lib/color"
+import { useInView } from "react-intersection-observer"
 
 function ListProduct({ data }: { data: PagingResponseData<ProductItem> }) {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const { ref, inView } = useInView();
-  const category = searchParams.get("category");
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const { ref, inView } = useInView()
+  const category = searchParams.get("category")
   const {
     data: queryData,
     isFetchingNextPage,
@@ -30,69 +30,76 @@ function ListProduct({ data }: { data: PagingResponseData<ProductItem> }) {
         product_type: category || "",
         limit: 30,
         page: pageParam || 1,
-      });
+      })
 
-      return res;
+      return res
     },
     getNextPageParam: (pages) => {
       if (pages.data.currentPage >= pages.data.totalPages) {
-        return undefined;
+        return undefined
       }
-      return pages.data.currentPage + 1;
+      return pages.data.currentPage + 1
     },
     initialPageParam: data.data.currentPage,
     initialData: {
       pages: [data],
       pageParams: [1],
     },
-  });
-  const products = queryData?.pages.flatMap((page) => page.data.data) || [];
+  })
+  const products = queryData?.pages.flatMap((page) => page.data.data) || []
 
   useEffect(() => {
-    refetch(); // Lấy lại dữ liệu khi `category` thay đổi
-  }, [category, refetch]);
+    refetch() // Lấy lại dữ liệu khi `category` thay đổi
+  }, [category, refetch])
 
   useEffect(() => {
     if (inView) {
-      fetchNextPage();
+      fetchNextPage()
     }
-  }, [inView, fetchNextPage]);
+  }, [inView, fetchNextPage])
 
   useEffect(() => {
     if (searchParams) {
-      router.replace(`?${searchParams.toString()}`);
+      router.replace(`?${searchParams.toString()}`)
     }
-  }, [searchParams, router]);
+  }, [searchParams, router])
 
   return (
     <Block>
-      <section className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-8  mt-6 bg-white justify-items-center ">
+      <section className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-8  mt-6 bg-white justify-items-center '>
         {products.length > 0 &&
           products.map((p) => (
             <div
               onClick={() => {}}
-              key={p._id}
-              className=" w-full pb-2 bg-white flex flex-col items-center cursor-pointer shadow-md transition-transform duration-300 transform hover:scale-105"
+              key={p.id}
+              className=' w-full pb-2 bg-white flex flex-col items-center cursor-pointer shadow-md transition-transform duration-300 transform hover:scale-105'
             >
-              <div className="w-full h-72 overflow-hidden shadow-sm">
-                <Img src={p?.product_thumb} alt={`category${p?._id}.png`} />
+              <div className='w-full h-72 overflow-hidden shadow-sm'>
+                <Img
+                  src={p?.product_thumb}
+                  alt={p?.product_name || "Sản phẩm"}
+                />
               </div>
-              <div className="flex flex-col flex-grow justify-between w-full">
-                <p className="mt-2 px-2 line-clamp-2 font-semibold text-center flex-grow">
+              <div className='flex flex-col flex-grow justify-between w-full'>
+                <p className='mt-2 px-2 line-clamp-2 font-semibold text-center flex-grow'>
                   {p?.product_name}
                 </p>
                 <div>
-                  <div className="flex justify-between">
-                    <p className="mt-1 px-2 line-clamp-2 text-slate-400 italic text-sm">
+                  <div className='flex justify-between'>
+                    <p className='mt-1 px-2 line-clamp-2 text-slate-400 italic text-sm'>
                       size: {p?.product_attributes?.size}
                     </p>
-                    <p className="mt-1 flex px-2 line-clamp-2 text-slate-400 italic items-center text-sm">
-                      {p?.product_ratingsAverage}
-                      <IoMdStar className="ml-1 text-yellow-400" />
+                    <p className='mt-1 flex px-2 line-clamp-2 text-slate-400 italic items-center text-sm'>
+                      {p?.product_ratings_average || "5.0"}
+                      <IoMdStar className='ml-1 text-yellow-400' />
                     </p>
                   </div>
-                  <p className="mt-2 px-2 text-primary font-semibold text-center">
-                    {convertCurrency(p?.product_price)}
+                  <p className='mt-2 px-2 text-primary font-semibold text-center'>
+                    {convertCurrency(
+                      parseFloat(
+                        p?.product_discounted_price || p?.product_price || "0"
+                      )
+                    )}
                   </p>
                 </div>
               </div>
@@ -100,11 +107,11 @@ function ListProduct({ data }: { data: PagingResponseData<ProductItem> }) {
           ))}
       </section>
       {isFetchingNextPage && (
-        <LoadingSpinner color={COLLOR.primary} classNameF="mt-4" />
+        <LoadingSpinner color={COLLOR.primary} classNameF='mt-4' />
       )}
       <div ref={ref} />
     </Block>
-  );
+  )
 }
 
-export default ListProduct;
+export default ListProduct

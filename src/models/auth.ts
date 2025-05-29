@@ -3,10 +3,12 @@ export type VerifyOTPType = {
   user_id: string
   message: string
 }
+
 export type UpdatePassType = {
-  userId: number
+  user_id: number
 }
+
 export type UpdatePassBodyType = {
-  userToken: string
-  userPassword: string
+  user_token: string
+  user_password: string
 }

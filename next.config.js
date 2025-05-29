@@ -7,20 +7,35 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'cdn-icons-png.flaticon.com',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "cdn-icons-png.flaticon.com",
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'bizweb.dktcdn.net',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "bizweb.dktcdn.net",
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'assets2.htv.com.vn',
-        port: '',
-        pathname: '/Images/**',
+        protocol: "https",
+        hostname: "assets2.htv.com.vn",
+        port: "",
+        pathname: "/Images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "github.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "example.com",
+        pathname: "/**",
       },
     ],
   },
@@ -36,4 +51,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig 
+module.exports = nextConfig

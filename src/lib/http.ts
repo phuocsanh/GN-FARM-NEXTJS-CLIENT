@@ -148,6 +148,8 @@ class HttpClient {
     const fullUrl = `${baseUrl}/${normalizePath(url)}`
 
     console.log("Making request to:", fullUrl)
+    console.log("Request method:", method)
+    console.log("Request options:", JSON.stringify(options))
 
     let body: string | FormData | undefined
     if (options?.body instanceof FormData) {

@@ -55,6 +55,17 @@ export type RegisterResType = z.TypeOf<typeof RegisterRes>
 
 export const LoginBody = z
   .object({
+    user_account: z.string().email("Email không đúng định dạng"),
+    user_password: z
+      .string()
+      .min(6, "Tối thiểu 6 kí tự")
+      .max(20, "Tối đa 20 kí tự"),
+  })
+  .strict()
+
+// Để tương thích ngược
+export const LoginBodyLegacy = z
+  .object({
     userAccount: z.string().email("Email không đúng định dạng"),
     userPassword: z
       .string()
@@ -67,13 +78,15 @@ export type LoginBodyType = z.TypeOf<typeof LoginBody>
 
 export type LoginResType = {
   user: {
-    _id: string
-    email: string
-    name: string
+    user_id: number
+    user_account: string
+    user_nickname?: string
+    user_avatar?: string
   }
   tokens: {
-    accessToken: string
-    refreshToken: string
+    access_token: string
+    refresh_token: string
+    expires_at?: string
   }
 }
 

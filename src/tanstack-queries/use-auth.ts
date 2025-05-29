@@ -17,7 +17,7 @@ import { useApiMutation, useApiQuery } from "@/hooks/use-api"
 export const useLoginMutation = () =>
   useApiMutation<ResponseData<LoginResType>, LoginBodyType>("/api/auth/login", {
     onSuccessCallback: (res) => {
-      if (res.code === 200 && res?.data?.tokens.accessToken) {
+      if (res.code === 200 && res?.data?.tokens.access_token) {
         useAppStore.setState({ isLogin: true })
       }
     },

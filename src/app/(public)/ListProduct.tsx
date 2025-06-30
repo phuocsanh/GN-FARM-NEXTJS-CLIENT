@@ -76,18 +76,18 @@ function ListProduct({ data }: { data: PagingResponseData<ProductItem> }) {
             >
               <div className='w-full h-72 overflow-hidden shadow-sm'>
                 <Img
-                  src={p?.product_thumb}
-                  alt={p?.product_name || "Sản phẩm"}
+                  src={p?.productThumb}
+                  alt={p?.productName || "Sản phẩm"}
                 />
               </div>
               <div className='flex flex-col flex-grow justify-between w-full'>
                 <p className='mt-2 px-2 line-clamp-2 font-semibold text-center flex-grow'>
-                  {p?.product_name}
+                  {p?.productName}
                 </p>
                 <div>
                   <div className='flex justify-between'>
                     <p className='mt-1 px-2 line-clamp-2 text-slate-400 italic text-sm'>
-                      size: {p?.product_attributes?.size}
+                      size: {p?.productAttributes?.size}
                     </p>
                     <p className='mt-1 flex px-2 line-clamp-2 text-slate-400 italic items-center text-sm'>
                       {p?.product_ratings_average || "5.0"}
@@ -97,7 +97,7 @@ function ListProduct({ data }: { data: PagingResponseData<ProductItem> }) {
                   <p className='mt-2 px-2 text-primary font-semibold text-center'>
                     {convertCurrency(
                       parseFloat(
-                        p?.product_discounted_price || p?.product_price || "0"
+                        p?.productDiscountedPrice || p?.productPrice || "0"
                       )
                     )}
                   </p>

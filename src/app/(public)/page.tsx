@@ -40,18 +40,18 @@ const ProductTypeSection = ({
           >
             <div className='w-full h-48 overflow-hidden shadow-sm'>
               <Img
-                src={product.product_thumb || "/placeholder.png"}
-                alt={product.product_name || "Sản phẩm"}
+                src={product.productThumb || "/placeholder.png"}
+                alt={product.productName || "Sản phẩm"}
               />
             </div>
             <div className='flex flex-col flex-grow justify-between w-full'>
               <p className='mt-2 px-2 line-clamp-2 font-semibold text-center flex-grow'>
-                {product.product_name || "Sản phẩm"}
+                {product.productName || "Sản phẩm"}
               </p>
               <div>
                 <div className='flex justify-between'>
                   <p className='mt-1 px-2 line-clamp-2 text-slate-400 italic text-sm'>
-                    {product.product_attributes?.size || ""}
+                    {product.productAttributes?.size || ""}
                   </p>
                   <p className='mt-1 flex px-2 line-clamp-2 text-slate-400 italic items-center text-sm'>
                     {product.product_ratings_average || "5.0"}
@@ -60,8 +60,8 @@ const ProductTypeSection = ({
                 </div>
                 <p className='mt-2 px-2 text-primary font-semibold text-center'>
                   {convertCurrency(
-                    parseFloat(product.product_discounted_price) ||
-                      parseFloat(product.product_price) ||
+                    parseFloat(product.productDiscountedPrice) ||
+                      parseFloat(product.productPrice) ||
                       0
                   )}
                 </p>

@@ -1,18 +1,18 @@
-// Type cho ProductType từ backend Go với snake_case
+// Type cho ProductType từ backend Go với camelCase
 export interface ProductType {
   id: number
   name: string
   description?: string | null
-  image_url?: string | null
-  created_at: string
-  updated_at: string
+  imageUrl?: string | null
+  createdAt: string
+  updatedAt: string
 }
 
-// Type cho ProductSubtype từ backend Go với snake_case
+// Type cho ProductSubtype từ backend Go với camelCase
 export interface ProductSubtype {
   id: number
   name: string
   description?: string | null
-  created_at: string
-  updated_at: string
+  createdAt: string
+  updatedAt: string
 }

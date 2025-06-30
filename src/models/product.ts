@@ -1,29 +1,29 @@
 export type ProductItem = {
-  // Cấu trúc chính từ backend Go với snake_case
+  // Cấu trúc chính từ backend Go với camelCase
   id: number
-  product_name: string
-  product_price: string
-  product_status?: number | null
-  product_thumb: string
-  product_pictures?: string[]
-  product_videos?: string[]
-  product_ratings_average?: string | null
+  productName: string
+  productPrice: string
+  productStatus?: number | null
+  productThumb: string
+  productPictures?: string[]
+  productVideos?: string[]
+  productRatingsAverage?: string | null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  product_variations?: any
-  product_description?: string | null
-  product_slug?: string | null
-  product_quantity?: number | null
-  product_type: number
-  sub_product_type?: number[]
+  productVariations?: any
+  productDescription?: string | null
+  productSlug?: string | null
+  productQuantity?: number | null
+  productType: number
+  subProductType?: number[]
   discount?: string | null
-  product_discounted_price: string
-  product_selled?: number | null
+  productDiscountedPrice: string
+  productSelled?: number | null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  product_attributes?: any
-  is_draft?: boolean | null
-  is_published?: boolean | null
-  created_at: string
-  updated_at: string
+  productAttributes?: any
+  isDraft?: boolean | null
+  isPublished?: boolean | null
+  createdAt: string
+  updatedAt: string
 }
 
 // Type cho tham số tìm kiếm sản phẩm

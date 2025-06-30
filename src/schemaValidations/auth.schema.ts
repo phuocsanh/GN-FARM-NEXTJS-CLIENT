@@ -78,10 +78,10 @@ export type LoginBodyType = z.TypeOf<typeof LoginBody>
 
 export type LoginResType = {
   user: {
-    user_id: number
-    user_account: string
-    user_nickname?: string
-    user_avatar?: string
+    userId: number
+    userAccount: string
+    userNickname?: string
+    userAvatar?: string
   }
   tokens: {
     access_token: string

@@ -3,11 +3,11 @@ import z from "zod"
 export const AccountRes = z
   .object({
     data: z.object({
-      user_id: z.number(),
-      user_account: z.string(),
-      user_nickname: z.string().optional(),
-      user_avatar: z.string().optional(),
-      user_email: z.string().optional(),
+      userId: z.number(),
+      userAccount: z.string(),
+      userNickname: z.string().optional(),
+      userAvatar: z.string().optional(),
+      userEmail: z.string().optional(),
     }),
     message: z.string(),
   })
